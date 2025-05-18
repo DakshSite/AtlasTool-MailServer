@@ -1,8 +1,8 @@
+import http from "http";
 import { Resend } from 'resend';
 import { configDotenv } from 'dotenv';
 configDotenv();
 
-import http from "http";
 
 const resend = new Resend(process.env.RESEND_API_KEY);
 
@@ -19,19 +19,13 @@ const sendMailToResend = async function (firstName, lastName, email, message) {
     </div>`,
   });
 
-  if (error) {
-    return console.error({ error });
-  }
+  if (error) return console.error({ error })
 };
 
 
 
 
 
-
-
-const appName = "https://dakshdev.vercel.app/" // convert it later by the name of atlas-tools
-// create Server
 const ContactServer = http.createServer((req, res) => {
     res.setHeader("Access-Control-Allow-Origin", "*");
     res.setHeader("Access-Control-Allow-Methods", "GET, POST");
@@ -43,8 +37,8 @@ const ContactServer = http.createServer((req, res) => {
   }
 
   if(req.method === "GET" && req.url == "/"){
-      res.setHeader("Content-Type", "text/plain")
-      res.end(appName)
+      res.setHeader("Content-Type", "text/html")
+      res.end(`<a href="https://atlas-tools.vercel.app/">Atlas Tools</a>`)
   }
 
   if(req.method === "POST" && req.url == "/"){
@@ -57,9 +51,8 @@ const ContactServer = http.createServer((req, res) => {
         sendMailToResend(firstName, lastName, email, message)
         res.end()
       })
-
   }
 });
 
-let PORT = 8080; 
-ContactServer.listen(PORT, () => console.log("Server is Runing on Port", PORT))
+const PORT = 8080; 
+ContactServer.listen(PORT)
